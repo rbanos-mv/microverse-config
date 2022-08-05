@@ -34,6 +34,14 @@ Type these commands into the terminal:
 ruby project-name.rb
 ```
 
+### Testing
+
+Type these commands into the terminal:
+
+```
+rspec
+```
+
 ## Authors
 
 👤 **Roberto A. Baños Alvarez**
