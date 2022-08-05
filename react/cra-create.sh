@@ -10,15 +10,17 @@ wget -O README.md https://raw.githubusercontent.com/rbanos-mv/microverse-config/
 sed -i "s/project-name/$1/" README.md
 
 git init
-# git remote add origin git@github.com:rbanos-mv/"$1".git
-# git add README.md
-# git commit -m "initial commit"
-# git branch -M dev
-# git push -u origin dev
-# git branch -M main
-# git push -u origin main
-# git branch -m project-setup
-# git push -u origin project-setup
+git remote add origin git@github.com:rbanos-mv/"$1".git
+git add README.md
+git commit -m "initial commit"
+git branch -M dev
+git push -u origin dev
+git branch -M main
+git push -u origin main
+git branch -m project-setup
+git push -u origin project-setup
+
+# create react app
 npx create-react-app .
 
 # download MIT.md, .prettierignore, .prittierrc
@@ -145,6 +147,6 @@ npm run eslint
 npx prettier --write .
 
 # Commit
-# git add .
-# git commit -m "project setup"
-# git push -u origin project-setup
+git add .
+git commit -m "project setup"
+git push -u origin project-setup
