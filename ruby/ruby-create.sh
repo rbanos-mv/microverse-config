@@ -41,6 +41,12 @@ gem 'rubocop', '>= 1.0', '< 2.0'
 bundle install
 echo "finished bundle install"
 
+mkdir classes
+mkdir json
+mkdir modules
+mkdir schema
+mkdir spec
+
 # Commit
 git add .
 git commit -m "project setup"
