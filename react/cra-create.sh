@@ -1,30 +1,22 @@
 #!/bin/bash
-# Script to perform cleanup after using create-react-app to initialize a new react application
+# Script to initialize a new react application
+if [ -z "$1" ]; then
+    echo -e "\nUsage: '$0 <project name> [no-repo]' to run this command!\n"
+    exit 1
+fi
+clear
 
-# Create application
-mkdir "$1"
+# create React app
+npx create-react-app $1
 cd "$1"
 
-# download README.md
+# download MIT.md && README.md
+mv README.md ReactCommands.md
 wget -O README.md https://raw.githubusercontent.com/rbanos-mv/microverse-config/main/react/README.md
+wget -O MIT.md https://raw.githubusercontent.com/rbanos-mv/microverse-config/main/react/MIT.md
 sed -i "s/project-name/$1/" README.md
 
-git init
-git remote add origin git@github.com:rbanos-mv/"$1".git
-git add README.md
-git commit -m "initial commit"
-git branch -M dev
-git push -u origin dev
-git branch -M main
-git push -u origin main
-git branch -m project-setup
-git push -u origin project-setup
-
-# create react app
-npx create-react-app .
-
-# download MIT.md, .prettierignore, .prittierrc
-wget -O MIT.md https://raw.githubusercontent.com/rbanos-mv/microverse-config/main/react/MIT.md
+# download .prettierignore, .prittierrc
 wget -O .prettierignore https://raw.githubusercontent.com/rbanos-mv/microverse-config/main/react/.prettierignore
 wget -O .prettierrc https://raw.githubusercontent.com/rbanos-mv/microverse-config/main/react/.prettierrc
 
@@ -34,11 +26,10 @@ wget -O .github/workflows/linters.yml https://raw.githubusercontent.com/microver
 wget -O .babelrc https://raw.githubusercontent.com/microverseinc/linters-config/master/react-redux/.babelrc
 wget -O .eslintrc.json https://raw.githubusercontent.com/microverseinc/linters-config/master/react-redux/.eslintrc.json
 wget -O .stylelintrc.json https://raw.githubusercontent.com/microverseinc/linters-config/master/react-redux/.stylelintrc.json
-sed -i 's/\.env\.local/\.env\n\.env\.local/' .gitignore
-sed -i 's/"name"/"homepage": ".",\n  "name"/' package.json
-sed -i 's/"react-scripts eject"/"react-scripts eject",\n    "deploy": "npm run build \&\& gh-pages -d build",\n    "eslint": "npx eslint . --fix ",\n    "stylelint": "npx stylelint **\/*.{css,scss} --fix"/' package.json
-mv README.md ReactCommands.md
-mv README.old.md README.md
+sed -i 's/\.env\.local/\.env\n&/' .gitignore
+sed -i 's/"name"/"homepage": ".",\n  &/' package.json
+sed -i 's/"react-scripts eject"/&,\n    "deploy": "npm run build \&\& gh-pages -d build",\n    "eslint": "npx eslint . --fix ",\n    "stylelint": "npx stylelint **\/*.{css,scss} --fix"/' package.json
+# mv README.old.md README.md
 
 touch .env.example
 echo "# The base API endpoints to which requests are made
@@ -146,7 +137,19 @@ npm run stylelint
 npm run eslint
 npx prettier --write .
 
-# Commit
-git add .
-git commit -m "project setup"
-git push -u origin project-setup
+if [ -z "$2" ]; then
+  git remote add origin git@github.com:rbanos-mv/"$1".git
+  git add README.md
+  git commit -m "initial commit"
+  git branch -M dev
+  git push -u origin dev
+  git branch -M main
+  git push -u origin main
+  git fetch
+  git checkout dev
+
+  # Commit
+  git add .
+  git commit -m "project setup"
+  git push -u origin dev
+fi
