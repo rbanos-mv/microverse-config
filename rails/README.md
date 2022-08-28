@@ -8,6 +8,8 @@
 
 - Ruby on Rails
 - PostgreSQL
+- devise / devise-jwt - for authentication
+- cancancan - for authorization
 
 ### Getting Started
 
