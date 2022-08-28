@@ -32,15 +32,22 @@ cd project-name
 bundle install
 ```
 
-- You will need a `.env` file before you install and run the project. The `.env` file contains environment variables needed to deploy the webpage. There is a commented `.env.example` file you can use as a guide to configure your own. Type the following command into the terminal (or Git Bash, if using Windows) to create your `.env` file:
+- You will need a `.env` file before you install and run the project. The `.env` file contains environment variables needed to deploy the webpage. There is a commented `.env.example` file you can use as a guide to configure your own. Type the following commands into the terminal (or Git Bash, if using Windows) to create your `.env` file:
 
 ```
 cp .env.example .env
+
+rails secret
 ```
 
 - Edit file .env
 
-  - Replace values for DATABASE_HOST, DATABASE_USER and DATABASE_PASSWORD.
+  - Provide the values for the variables
+    - DATABASE_HOST
+    - DATABASE_USER
+    - DATABASE_PASSWORD
+    - DEVISE_JWT_SECRET_KEY
+  - Assign the value returned by the `rails secret` to DEVISE_JWT_SECRET_KEY.
 
 - Type this commands into the terminal:
 
@@ -48,9 +55,9 @@ cp .env.example .env
 rails db:reset
 ```
 
-### Run
+### Run application
 
-- Type these commands into the terminal:
+- Type this command into the terminal:
 
 ```
 rails server
@@ -60,7 +67,7 @@ rails server
 
 ### Testing
 
-Type these commands into the terminal:
+- Type this command into the terminal:
 
 ```
 rspec
