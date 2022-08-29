@@ -99,10 +99,15 @@ echo "
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Warden::Test::Helpers
 " > ./spec/support/devise.rb
+sed -i 's/config.reconfirmable = true/config.reconfirmable = false/' config/initializers/devise.rb
+
   # Generate devise views
 rails g devise:views
 find ./app/views/devise/ -type f -exec sed -i 's/{ method: :post }/{ "data-turbo": "false", method: :post }/' {} \;
 find ./app/views/devise/ -type f -exec sed -i 's/{ method: :put }/{ "data-turbo": "false", method: :put }/' {} \;
+
+  # Configure cancancan
+rails g cancan:ability
 
 # Configure capybara
 echo "require 'capybara/rspec'
