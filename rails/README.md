@@ -70,7 +70,7 @@ rails server
 - Type this command into the terminal:
 
 ```
-rspec
+bundle exec rspec
 ```
 
 ## Authors
