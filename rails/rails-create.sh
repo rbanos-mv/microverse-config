@@ -238,11 +238,13 @@ sed -i -n '2{h; d}; 6{p; x;}; p' config/routes.rb
 
   # Add securitySchemes component to swagger_helper.rb
 comp="      components: {\n        securitySchemes: {\n          bearerAuth: {\n            type: :http,\n            scheme: :bearer,\n            bearerFormat: :JWT\n          }\n        }\n      }"
-sed -i 's/]/&,\n'"$comp"'/;s/www\.example\.com/localhost:3001/' spec/swagger_helper.rb
+sed -i 's/https/http/;s/]/&,\n'"$comp"'/;s/www\.example\.com/localhost:3001/' spec/swagger_helper.rb
 fi
 
 bundle
 rubocop -A -o log/rubocop.log
+# This configuration MUST BE after linters
+sed -i 's/#   config\.filter_run_when_matching/config\.filter_run_when_matching/' spec/spec_helper.rb
 git add .
 git commit -m "Install Rspec and Swagger"
 
@@ -321,11 +323,7 @@ echo "class CreateJwtDenylist < ActiveRecord::Migration[7.0]
 end" >| $(ls db/migrate/*denylist.rb)
 
   # serialize user model
-mkdir app/serializers
-echo "class UserSerializer
-  include FastJsonapi::ObjectSerializer
-  attributes :id, :name, :email
-end" > app/serializers/user_serializer.rb
+rails g serializer user id name email
 
   # update JwtDenylist model
 echo "class JwtDenylist < ApplicationRecord
@@ -493,11 +491,29 @@ end
 
 rubocop -A -o log/rubocop.log
 git add .
-git commit -m "Install and configure and Capybara"
+git commit -m "Install and configure Capybara"
 fi
 
-# This configuration MUST BE after linters
-sed -i 's/#   config\.filter_run_when_matching/config\.filter_run_when_matching/' spec/spec_helper.rb
+# Setup active_storage
+if [[ $storage == "y" ]]; then
+rails active_storage:install
+
+rails db:migrate
+rubocop -A -o log/rubocop.log
+git add .
+git commit -m "Install and configure active_storage"
+fi
+
+# Setup paranoia
+if [[ $nodelete == "y" ]]; then
+sed -i "s/image_processing.*/&\n\ngem 'paranoia'\n/" Gemfile
+
+bundle
+rubocop -A -o log/rubocop.log
+git add .
+git commit -m "Install and configure paranoia for soft-deletes"
+fi
+
 
 if [[ $repo != "n" ]]; then
   git remote add origin git@github.com:"$repo"/"$1".git
